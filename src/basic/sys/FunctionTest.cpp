@@ -36,6 +36,7 @@ int functionPointer(){
     typedef int (*Fun1) (int, int);
     Fun1 fun1 = plus;
     fun1(1, 3);
+    return 0;
 }
 
 
@@ -58,6 +59,7 @@ inline double square(double x) {
 }
 int inlineFunction(){
     std::cout << square(2) << std::endl;
+    return 0;
 }
 
 // ------------------------------默认参数--------------------------------- //
@@ -70,13 +72,17 @@ int defaultArgFunction() {
     std::string s = "abc";
     std::cout << left(s, 2) << std::endl;
     std::cout << left(s) << std::endl;
+    return 0;
 }
 
 // ------------------------------泛型--------------------------------- //
 
 template<typename T>
 void cal(T a, T b) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-value"
     a + b;
+#pragma clang diagnostic pop
 }
 
 void templateTest(){

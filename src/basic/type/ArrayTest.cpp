@@ -35,11 +35,14 @@ int main(){
     delete [] arrNew;
 
     int length = 2;
-    int* arrN = new int[length];
+    auto arrN = new int[length];
 
     cout << "--------------------" << endl;
     // 遍历数组
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsizeof-pointer-div"
     int len = sizeof(arrN)/sizeof(int);
+#pragma clang diagnostic pop
     for(int i=0;i<len;i++){
         arrN[i] = i + 10;
     }

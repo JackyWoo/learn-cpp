@@ -49,7 +49,10 @@ void minMaxTest(){
     int yams[] = {1,2,3};
 
     cout << "array size " << sizeof yams / sizeof(int)<< endl;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warray-bounds"
     cout << "array out of bound " << yams[4] << endl;
+#pragma clang diagnostic pop
 
     // 初始化第一个值，后续值填充0；
     int arr[3] = {1};

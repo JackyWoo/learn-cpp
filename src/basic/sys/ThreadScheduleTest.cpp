@@ -11,7 +11,7 @@
  */
 
 // prototype
-void task();
+[[noreturn]] void task();
 
 int main()
 {
@@ -26,7 +26,7 @@ int main()
     for(int i=0; i<threadCount; i++){
         t[i] = thread(task);
         //多少核心
-        cout << "hard ware concurrency: " << t[i].hardware_concurrency() << endl;
+        cout << "hard ware concurrency: " << std::thread::hardware_concurrency() << endl;
     }
 
     for(auto &tt : t){
@@ -46,11 +46,11 @@ int main()
  * no system invoking, so there is no context_switch.
  * @return
  */
-void task()
+[[noreturn]] void task()
 {
-    int i;
+    int i{0};
     while(true)
     {
-        i++%INT8_MAX;
+        i = i++%INT8_MAX; // NOLINT (bugprone-unused-return-value)
     }
 }

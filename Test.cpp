@@ -8,15 +8,15 @@
 #include <map>
 #include <mutex>
 #include <queue>
+#include <regex>
 #include <shared_mutex>
+#include <sstream>
 #include <thread>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
-#include <sstream>
-#include <type_traits>
-#include <unistd.h>
 #include <fcntl.h>
-#include <regex>
+#include <unistd.h>
 
 using Task = std::function<void()>;
 
@@ -196,21 +196,21 @@ int main()
     {
         int a;
 
-        bool operator<(const Ob &rhs) const {
-            return this->a < rhs.a;;
+        bool operator<(const Ob & rhs) const
+        {
+            return this->a < rhs.a;
+            ;
         }
 
-        bool operator>(const Ob &rhs) const {
-            return this->a > rhs.a;;
+        bool operator>(const Ob & rhs) const
+        {
+            return this->a > rhs.a;
+            ;
         }
 
-        bool operator<=(const Ob &rhs) const {
-            return this->a <= rhs.a;
-        }
+        bool operator<=(const Ob & rhs) const { return this->a <= rhs.a; }
 
-        bool operator>=(const Ob &rhs) const {
-            return this->a >= rhs.a;
-        }
+        bool operator>=(const Ob & rhs) const { return this->a >= rhs.a; }
 
         bool operator==(const Ob & rhs) const { return a == rhs.a; }
 
@@ -235,65 +235,65 @@ int main()
     String ccc = "1000";
     char ccc_data[4] = {'\1', '\0', '\0', '\0'};
     int int_val = *reinterpret_cast<int *>(ccc_data);
-    cout<<int_val<<endl;
+    cout << int_val << endl;
 
-    cout<<int_val<<endl;
+    cout << int_val << endl;
 
-    int32_t aaa2=2003003507;
-//    int32_t aaa2=1936221047;
+    int32_t aaa2 = 2003003507;
+    //    int32_t aaa2=1936221047;
     char * ccc2 = "wchs";
-    cout<<"rr\t";
-    cout<<*reinterpret_cast<char *>(&aaa2)<<endl;
-    cout<<*reinterpret_cast<int32_t *>(ccc2)<<endl;
+    cout << "rr\t";
+    cout << *reinterpret_cast<char *>(&aaa2) << endl;
+    cout << *reinterpret_cast<int32_t *>(ccc2) << endl;
 
     int i10 = 2;
-    cout<<hex<<__builtin_bswap32(i10)<<endl;
-    cout<<hex<<__builtin_bswap32(__builtin_bswap32(i10))<<endl;
+    cout << hex << __builtin_bswap32(i10) << endl;
+    cout << hex << __builtin_bswap32(__builtin_bswap32(i10)) << endl;
 
     std::stringstream ss1;
-    ss1<<hex;
-    ss1<<20<<endl;
-    cout<<ss1.str()<<endl;
+    ss1 << hex;
+    ss1 << 20 << endl;
+    cout << ss1.str() << endl;
 
     std::stringstream ss2;
-//    ss2<<hex;
-    ss2<<20<<endl;
-    cout<<ss2.str()<<endl;
+    //    ss2<<hex;
+    ss2 << 20 << endl;
+    cout << ss2.str() << endl;
 
     String ssss2("123", 2);
-    cout<<ssss2<<endl;
-    cout<<sizeof(ssss2.size())<<endl;
-    cout<<ssss2.max_size()<<endl;
+    cout << ssss2 << endl;
+    cout << sizeof(ssss2.size()) << endl;
+    cout << ssss2.max_size() << endl;
     char * cccc2 = ssss2.data();
     char aaaa = *(cccc2 + 2);
-    cout<<aaaa<<endl;
+    cout << aaaa << endl;
 
     char a101[5] = {'\0'};
     a101[0] = '1';
 
     String ss10(a101, 2);
-    cout<<ss10.size()<<endl;
-    cout<<ss10.data()<<endl;
+    cout << ss10.size() << endl;
+    cout << ss10.data() << endl;
 
     String sss0;
-//    int aaa0 = std::stoi(sss0);
-//    cout<<"st0i "<<aaa0<<endl;
+    //    int aaa0 = std::stoi(sss0);
+    //    cout<<"st0i "<<aaa0<<endl;
 
 
-    cout<<"-------vector-------"<<endl;
-    vector<int> vv ;
-    cout<<vv.size()<<endl;
-    cout<<vv.capacity()<<endl;
+    cout << "-------vector-------" << endl;
+    vector<int> vv;
+    cout << vv.size() << endl;
+    cout << vv.capacity() << endl;
     vv.push_back(1);
     vv.push_back(2);
     vv.push_back(3);
-    cout<<vv.size()<<endl;
-    cout<<vv.capacity()<<endl;
+    cout << vv.size() << endl;
+    cout << vv.capacity() << endl;
     vv.resize(1);
-    cout<<vv.size()<<endl;
-    cout<<vv.capacity()<<endl;
+    cout << vv.size() << endl;
+    cout << vv.capacity() << endl;
 
-    cout<<"-------split string-------"<<endl;
+    cout << "-------split string-------" << endl;
     size_t pos1;
     std::string token;
     String list_str = "1,2,3";
@@ -301,38 +301,36 @@ int main()
     {
         token = list_str.substr(0, pos1);
         list_str.erase(0, pos1 + 1);
-        cout<<token<<endl;
+        cout << token << endl;
     }
-    cout<<list_str<<endl;
+    cout << list_str << endl;
 
 
-    cout<<"-------split string-------"<<endl;
+    cout << "-------split string-------" << endl;
     if (std::is_integral<int>::value)
     {
-        cout<<"int is integral"<<endl;
+        cout << "int is integral" << endl;
     }
     struct A
     {
-        String size(){
-            return "1";
-        }
+        String size() { return "1"; }
     };
 
-    String(A::* ptr)() = &A::size;
+    String (A::*ptr)() = &A::size;
     std::cout << "A has member function size() : " << std::is_member_function_pointer<decltype(ptr)>::value << std::endl;
 
-    cout<<"-------username-------"<<endl;
+    cout << "-------username-------" << endl;
 
     char user_name[64];
     getlogin_r(user_name, 64);
-    cout<<user_name<<endl;
+    cout << user_name << endl;
 
 
-    cout<<"-------aa-------"<<endl;
+    cout << "-------aa-------" << endl;
 
     int32_t aa11 = __builtin_bswap32(1835955314);
     int32_t aa12 = __builtin_bswap32(1835955314);
-    cout << String(reinterpret_cast<char *>(&aa11), 4)<<endl;
+    cout << String(reinterpret_cast<char *>(&aa11), 4) << endl;
 
     String regex = "[a-zA-Z0-9_:]";
     String ss15 = "-aa-bb";
@@ -342,35 +340,36 @@ int main()
         ss15 = "m_" + ss15;
     }
 
-    std::replace_if(ss15.begin(), ss15.end(), [](char c){return !(isalnum(c) || c == '_' || c == ':');}, '_');
-    cout << ss15 <<endl;
-    cout << isalnum('_') <<endl;
+    std::replace_if(
+        ss15.begin(), ss15.end(), [](char c) { return !(isalnum(c) || c == '_' || c == ':'); }, '_');
+    cout << ss15 << endl;
+    cout << isalnum('_') << endl;
 
     String metric_name = "0_a0a-b--b--";
     metric_name = std::regex_replace(metric_name, std::regex("[^a-zA-Z0-9_:]"), "_");
-    cout<<metric_name<<endl;
+    cout << metric_name << endl;
     metric_name = std::regex_replace(metric_name, std::regex("^[^a-zA-Z]*"), "");
 
-    cout<<metric_name<<endl;
+    cout << metric_name << endl;
 
-    cout<<dec<<std::numeric_limits<int64_t>::max()<<endl;
-    cout<<"218129922835423721"<<endl;
+    cout << dec << std::numeric_limits<int64_t>::max() << endl;
+    cout << "218129922835423721" << endl;
 
     int64_t num1 = std::numeric_limits<int64_t>::max();
-    cout<<num1+1<<endl;
+    cout << num1 + 1 << endl;
 
-    cout<<"-------aa-------"<<endl;
+    cout << "-------aa-------" << endl;
 
     int fd = ::open("a.log", O_RDWR | O_CREAT | O_TRUNC, 0644);
 
     char * to_write = "123456";
     int size = write(fd, to_write, 6);
-    cout<<"write size "<< size<<endl;
+    cout << "write size " << size << endl;
     ftruncate(fd, 2);
-    char  read_content [6];
+    char read_content[6];
     int size2 = read(fd, read_content, 2);
-    cout<<"read size "<< size2<<endl;
-    cout<<"read content "<< read_content<<endl;
+    cout << "read size " << size2 << endl;
+    cout << "read content " << read_content << endl;
     close(fd);
 
     printf("the size of i is %zu \n", -1);
@@ -384,36 +383,102 @@ int main()
     TastS ts;
     TastS ts2{};
 
-    cout<<"struct default value:"<<endl;
-    cout<<"ts: " << ts.a<<endl;
-    cout<<"ts2: " <<ts2.a<<endl;
+    cout << "struct default value:" << endl;
+    cout << "ts: " << ts.a << endl;
+    cout << "ts2: " << ts2.a << endl;
 
-    cout<<"-------aa-------"<<endl;
+    cout << "-------aa-------" << endl;
     unordered_map<int64_t, int64_t> mmmmp;
 
-    cout<<mmmmp[0]<<endl;
+    cout << mmmmp[0] << endl;
 
 
-    cout<<"-------mm-------"<<endl;
+    cout << "-------mm-------" << endl;
     unordered_map<int64_t, int64_t> tsmap;
-    for (int i=0; i<10; i++)
+    for (int i = 0; i < 10; i++)
         tsmap[i] = i;
 
     thread t_map([&tsmap] {
         auto it = tsmap.cbegin();
         while (it != tsmap.cend())
         {
-            cout<<it->second<<endl;
-            this_thread::sleep_for(chrono::microseconds (100));
+            cout << it->second << endl;
+            this_thread::sleep_for(chrono::microseconds(100));
             it++;
         }
     });
 
-    this_thread::sleep_for(chrono::microseconds (100));
+    this_thread::sleep_for(chrono::microseconds(100));
     tsmap.insert_or_assign(11, 11);
     tsmap.erase(1);
     tsmap.erase(9);
-    cout<<"size "<<tsmap.size()<<endl;
+    cout << "size " << tsmap.size() << endl;
     t_map.join();
-    cout<<"size "<<tsmap.size()<<endl;
+    cout << "size " << tsmap.size() << endl;
+
+
+    cout << "-------alignment-------" << endl;
+    struct Foo100
+    {
+        char a;
+        int32_t b;
+        double c;
+    };
+    struct Foo101
+    {
+        int32_t b;
+        double c;
+        char a;
+    };
+    struct Foo102
+    {
+        char a;
+        Foo101 f;
+    };
+    struct Foo103
+    {
+        char a;
+        char b;
+    };
+    struct Foo104
+    {
+        int32_t a;
+        char b;
+    };
+    cout << "Foo100 size " << sizeof(Foo100) << endl; // size 包含了alignment 和 padding的空间， 字段顺序不同，size可能不同
+    cout << "Foo101 size " << sizeof(Foo101) << endl;
+    cout << "Foo102 size " << sizeof(Foo102) << endl;
+    cout << "Foo103 size " << sizeof(Foo103) << endl;
+    cout << "Foo104 size " << sizeof(Foo104) << endl;
+    cout << "Foo100 alignment " << alignof(Foo100) << endl; // struct的对齐是最大字段的类型的对齐的大小
+    cout << "Foo101 alignment " << alignof(Foo101) << endl;
+    cout << "Foo102 alignment " << alignof(Foo102) << endl;
+    cout << "Foo103 alignment " << alignof(Foo103) << endl;
+    cout << "Foo104 alignment " << alignof(Foo104) << endl;
+
+
+    cout << "-------pirnt %zu %d-------" << endl;
+    size_t ass = 94081208070;
+    cout << int(ass)<< endl;
+    cout << sizeof(mm1.size());
+
+    cout << "-------resize-------" << endl;
+    String ssss = "123";
+    ssss.resize(2);
+    cout << ssss <<endl;
+
+    cout << "-------map emplace resut-------" << endl;
+
+    unordered_map<String, int32_t> map_ret_test;
+    map_ret_test.emplace("a", 1);
+    auto map_ret = map_ret_test.emplace("a", 2);
+    cout << map_ret_test.size() << " "<< map_ret_test.at("a") << " " << map_ret.second << endl;
+
+    auto& aamm = map_ret_test["b"];
+    aamm = 5;
+    cout<< map_ret_test["b"] <<endl;
+    cout<< sizeof(String) <<endl;
+
+
+
 }

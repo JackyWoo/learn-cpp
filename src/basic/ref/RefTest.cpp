@@ -124,7 +124,10 @@ void pointerTest(IntVector * vector)
 
 IntVector && generate(int size)
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreturn-stack-address"
     return IntVector(size);
+#pragma clang diagnostic pop
 }
 
 IntVector generate1(int size)
@@ -135,7 +138,10 @@ IntVector generate1(int size)
 IntVector & generate2(int size)
 {
     IntVector vec(size);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreturn-stack-address"
     return vec;
+#pragma clang diagnostic pop
 }
 
 

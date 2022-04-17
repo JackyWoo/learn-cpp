@@ -107,7 +107,10 @@ std::shared_ptr<PosInvoker> stackTest()
     return std::make_shared<PosInvoker>(p);
 }
 
-
+void invoker(std::shared_ptr<int32_t> &p)
+{
+    p = std::make_shared<int32_t>(100);
+}
 
 int main()
 {
@@ -117,4 +120,8 @@ int main()
 //    std::shared_ptr<PosInvoker> ptr = stackTest();
 //    test();
 //    std::cout<< ptr->p.a<<std::endl;
+
+    std::shared_ptr<int32_t> p;
+    invoker(p);
+    std::cout << p.get() <<std::endl;
 }
