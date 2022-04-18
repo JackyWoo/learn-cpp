@@ -16,6 +16,7 @@ std::string getCurrentExceptionMessage()
     {
         std::cout << "lala" << std::endl;
     }
+    return "";
 }
 
 int main()
