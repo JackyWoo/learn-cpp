@@ -1,2 +1,0 @@
-/usr/bin/ar qc lib_poco_xml_expat.a CMakeFiles/_poco_xml_expat.dir/__/__/poco/XML/src/xmlrole.c.o CMakeFiles/_poco_xml_expat.dir/__/__/poco/XML/src/xmltok_impl.c.o CMakeFiles/_poco_xml_expat.dir/__/__/poco/XML/src/xmltok_ns.c.o CMakeFiles/_poco_xml_expat.dir/__/__/poco/XML/src/xmltok.c.o
-/usr/bin/ranlib lib_poco_xml_expat.a
