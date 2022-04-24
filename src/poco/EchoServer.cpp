@@ -1,8 +1,4 @@
 //
-// Created by JackyWoo on 2022/4/16.
-//
-
-//
 // EchoServer.cpp
 //
 // This sample demonstrates the SocketReactor and SocketAcceptor classes.
@@ -16,6 +12,8 @@
 
 #include <Poco/Net/SocketReactor.h>
 #include <Poco/Net/SocketAcceptor.h>
+#include <Poco/Net/ParallelSocketReactor.h>
+#include <Poco/Net/ParallelSocketAcceptor.h>
 #include <Poco/Net/SocketNotification.h>
 #include <Poco/Net/StreamSocket.h>
 #include <Poco/Net/ServerSocket.h>
@@ -29,6 +27,8 @@
 #include <Poco/Util/OptionSet.h>
 #include <Poco/Util/HelpFormatter.h>
 #include <iostream>
+
+#include "NewSockerAcceptor.h"
 
 
 using Poco::Net::SocketReactor;
@@ -49,120 +49,6 @@ using Poco::Util::Option;
 using Poco::Util::OptionSet;
 using Poco::Util::HelpFormatter;
 
-
-class EchoServiceHandler
-    /// I/O handler class. This class (un)registers handlers for I/O based on
-    /// data availability. To ensure non-blocking behavior and alleviate spurious
-    /// socket writability callback triggering when no data to be sent is available,
-    /// FIFO buffers are used. I/O FIFOBuffer sends notifications on transitions
-    /// from [1] non-readable (i.e. empty) to readable, [2] writable to non-writable 
-    /// (i.e. full) and [3] non-writable (i.e. full) to writable.
-    /// Based on these notifications, the handler member functions react by
-    /// enabling/disabling respective reactor framework notifications.
-{
-public:
-    EchoServiceHandler(StreamSocket& socket, SocketReactor& reactor):
-            _socket(socket),
-            _reactor(reactor),
-            _fifoIn(BUFFER_SIZE, true),
-            _fifoOut(BUFFER_SIZE, true)
-    {
-        Application& app = Application::instance();
-        app.logger().information("Connection from " + socket.peerAddress().toString());
-
-        _reactor.addEventHandler(_socket, NObserver<EchoServiceHandler, ReadableNotification>(*this, &EchoServiceHandler::onSocketReadable));
-        _reactor.addEventHandler(_socket, NObserver<EchoServiceHandler, ShutdownNotification>(*this, &EchoServiceHandler::onSocketShutdown));
-
-        _fifoOut.readable += delegate(this, &EchoServiceHandler::onFIFOOutReadable);
-        _fifoIn.writable += delegate(this, &EchoServiceHandler::onFIFOInWritable);
-    }
-
-    ~EchoServiceHandler()
-    {
-        Application& app = Application::instance();
-        try
-        {
-            app.logger().information("Disconnecting " + _socket.peerAddress().toString());
-        }
-        catch (...)
-        {
-        }
-        _reactor.removeEventHandler(_socket, NObserver<EchoServiceHandler, ReadableNotification>(*this, &EchoServiceHandler::onSocketReadable));
-        _reactor.removeEventHandler(_socket, NObserver<EchoServiceHandler, WritableNotification>(*this, &EchoServiceHandler::onSocketWritable));
-        _reactor.removeEventHandler(_socket, NObserver<EchoServiceHandler, ShutdownNotification>(*this, &EchoServiceHandler::onSocketShutdown));
-
-        _fifoOut.readable -= delegate(this, &EchoServiceHandler::onFIFOOutReadable);
-        _fifoIn.writable -= delegate(this, &EchoServiceHandler::onFIFOInWritable);
-    }
-
-    void onFIFOOutReadable(bool& b)
-    {
-        if (b)
-            _reactor.addEventHandler(_socket, NObserver<EchoServiceHandler, WritableNotification>(*this, &EchoServiceHandler::onSocketWritable));
-        else
-            _reactor.removeEventHandler(_socket, NObserver<EchoServiceHandler, WritableNotification>(*this, &EchoServiceHandler::onSocketWritable));
-    }
-
-    void onFIFOInWritable(bool& b)
-    {
-        if (b)
-            _reactor.addEventHandler(_socket, NObserver<EchoServiceHandler, ReadableNotification>(*this, &EchoServiceHandler::onSocketReadable));
-        else
-            _reactor.removeEventHandler(_socket, NObserver<EchoServiceHandler, ReadableNotification>(*this, &EchoServiceHandler::onSocketReadable));
-    }
-
-    void onSocketReadable(const AutoPtr<ReadableNotification>& pNf)
-    {
-        try
-        {
-            int len = _socket.receiveBytes(_fifoIn);
-            if (len > 0)
-            {
-                _fifoIn.drain(_fifoOut.write(_fifoIn.buffer(), _fifoIn.used()));
-            }
-            else
-            {
-                delete this;
-            }
-        }
-        catch (Poco::Exception& exc)
-        {
-            Application& app = Application::instance();
-            app.logger().log(exc);
-            delete this;
-        }
-    }
-
-    void onSocketWritable(const AutoPtr<WritableNotification>& pNf)
-    {
-        try
-        {
-            _socket.sendBytes(_fifoOut);
-        }
-        catch (Poco::Exception& exc)
-        {
-            Application& app = Application::instance();
-            app.logger().log(exc);
-            delete this;
-        }
-    }
-
-    void onSocketShutdown(const AutoPtr<ShutdownNotification>& pNf)
-    {
-        delete this;
-    }
-
-private:
-    enum
-    {
-        BUFFER_SIZE = 1024
-    };
-
-    StreamSocket   _socket;
-    SocketReactor& _reactor;
-    FIFOBuffer     _fifoIn;
-    FIFOBuffer     _fifoOut;
-};
 
 
 class EchoServer: public Poco::Util::ServerApplication
@@ -189,21 +75,23 @@ public:
     {
     }
 
-    ~EchoServer() override = default;
+    ~EchoServer()
+    {
+    }
 
 protected:
-    void initialize(Application& self) override
+    void initialize(Application& self)
     {
         loadConfiguration(); // load default configuration files, if present
         ServerApplication::initialize(self);
     }
 
-    void uninitialize() override
+    void uninitialize()
     {
         ServerApplication::uninitialize();
     }
 
-    void defineOptions(OptionSet& options) override
+    void defineOptions(OptionSet& options)
     {
         ServerApplication::defineOptions(options);
 
@@ -213,7 +101,7 @@ protected:
                         .repeatable(false));
     }
 
-    void handleOption(const std::string& name, const std::string& value) override
+    void handleOption(const std::string& name, const std::string& value)
     {
         ServerApplication::handleOption(name, value);
 
@@ -230,7 +118,7 @@ protected:
         helpFormatter.format(std::cout);
     }
 
-    int main(const std::vector<std::string>& args) override
+    int main(const std::vector<std::string>& args)
     {
         if (_helpRequested)
         {
@@ -244,18 +132,18 @@ protected:
             // set-up a server socket
             ServerSocket svs(port);
             // set-up a SocketReactor...
-            SocketReactor reactor;
+            ParallelSocketReactor<SocketReactor> reactor;
             // ... and a SocketAcceptor
-            SocketAcceptor<EchoServiceHandler> acceptor(svs, reactor);
-            // run the reactor in its own thread so that we can wait for 
+            ParallelSocketAcceptor<EchoServiceHandler, SocketReactor> acceptor(svs, reactor, 1);
+            // run the reactor in its own thread so that we can wait for
             // a termination request
-            Thread thread;
-            thread.start(reactor);
+//            Thread thread;
+//            thread.start(reactor);
             // wait for CTRL-C or kill
             waitForTerminationRequest();
             // Stop the SocketReactor
             reactor.stop();
-            thread.join();
+//            thread.join();
         }
         return Application::EXIT_OK;
     }

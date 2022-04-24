@@ -1,0 +1,2 @@
+/usr/bin/ar qc lib_poco_json_pdjson.a CMakeFiles/_poco_json_pdjson.dir/__/__/poco/JSON/src/pdjson.c.o
+/usr/bin/ranlib lib_poco_json_pdjson.a

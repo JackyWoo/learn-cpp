@@ -188,6 +188,11 @@ if (USE_INTERNAL_POCO_LIBRARY)
         ${LIBRARY_DIR}/Foundation/src/Windows1252Encoding.cpp
     )
 
+
+#    add_headers_and_sources(_poco_foundation ${LIBRARY_DIR}/Foundation/src)
+    #    message(STATUS "srcccc -- ${_poco_foundation_sources}")
+    #    add_library (_poco_foundation ${_poco_foundation_sources})
+
     add_library (_poco_foundation ${SRCS})
     add_library (Poco::Foundation ALIAS _poco_foundation)
 
@@ -221,6 +226,10 @@ if (USE_INTERNAL_POCO_LIBRARY)
             POCO_ENABLE_CPP11
             POCO_OS_FAMILY_UNIX
     )
+    find_package(ZLIB)
+    message(STATUS "ZLIB_INCLUDE_DIR - ${ZLIB_INCLUDE_DIR}, ZLIB_LIBRARIES - ${ZLIB_LIBRARIES}")
+    find_package(OpenSSL)
+    message(STATUS "OPENSSL_INCLUDE_DIR - ${OPENSSL_INCLUDE_DIR}, OPENSSL_LIBRARIES - ${OPENSSL_LIBRARIES}")
     target_include_directories (_poco_foundation SYSTEM PUBLIC ${LIBRARY_DIR}/Foundation/include)
     target_link_libraries (_poco_foundation PRIVATE Poco::Foundation::PCRE ${ZLIB_LIBRARIES})
 else ()

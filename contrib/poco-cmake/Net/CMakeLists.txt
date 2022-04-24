@@ -125,6 +125,12 @@ if (USE_INTERNAL_POCO_LIBRARY)
             -Wno-deprecated
             -Wno-extra-semi
     )
+    if (USE_EPOLL)
+        target_compile_definitions (_poco_net
+                PRIVATE
+                POCO_HAVE_FD_EPOLL
+        )
+    endif ()
     target_include_directories (_poco_net SYSTEM PUBLIC ${LIBRARY_DIR}/Net/include)
     target_link_libraries (_poco_net PUBLIC Poco::Foundation)
 else ()

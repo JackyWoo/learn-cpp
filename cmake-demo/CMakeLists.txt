@@ -1,0 +1,19 @@
+add_subdirectory(src)
+add_subdirectory(contrib)
+
+add_executable(Main Main.cpp)
+
+target_link_libraries(Main
+    PRIVATE B
+    INTERFACE B
+)
+
+get_target_property(Main_INCLUDE_DIRECTORIES Main INCLUDE_DIRECTORIES)
+get_target_property(Main_INTERFACE_INCLUDE_DIRECTORIES Main INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(Main_LINK_LIBRARIES Main  LINK_LIBRARIES)
+get_target_property(Main_INTERFACE_LINK_LIBRARIES Main  INTERFACE_LINK_LIBRARIES)
+
+message(STATUS "Main_INCLUDE_DIRECTORIES : ${Main_INCLUDE_DIRECTORIES}")
+message(STATUS "Main_INTERFACE_INCLUDE_DIRECTORIES : ${Main_INTERFACE_INCLUDE_DIRECTORIES}")
+message(STATUS "Main_LINK_LIBRARIES : ${Main_LINK_LIBRARIES}")
+message(STATUS "Main_INTERFACE_LINK_LIBRARIES : ${Main_INTERFACE_LINK_LIBRARIES}")

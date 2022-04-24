@@ -1,0 +1,1 @@
+/usr/local/opt/llvm/bin/clang++ -pthread -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/Stock.dir/oop/Stock.cpp.o CMakeFiles/Stock.dir/oop/Invoker.cpp.o CMakeFiles/Stock.dir/oop/OpStock.cpp.o -o Stock 

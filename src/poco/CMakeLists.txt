@@ -1,4 +1,4 @@
-add_executable(EchoServer EchoServer.cpp)
+add_executable(EchoServer EchoServer.cpp NewSockerAcceptor.h)
 
 target_link_libraries (EchoServer
         PUBLIC

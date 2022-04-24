@@ -3,7 +3,7 @@ MESSAGE( STATUS "LIBRARY_DIR = ${LIBRARY_DIR}")
 
 add_subdirectory (Crypto)
 add_subdirectory (Data)
-#add_subdirectory (Data/ODBC)
+add_subdirectory (Data/ODBC)
 add_subdirectory (Foundation)
 add_subdirectory (JSON)
 #add_subdirectory (MongoDB)

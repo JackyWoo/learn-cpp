@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "src/cmake-demo/contrib/some_project",
+		"source" : "src/cmake-demo/contrib/some_project"
+	}
+}
