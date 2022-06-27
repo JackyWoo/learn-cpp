@@ -30,7 +30,18 @@ if (ENABLE_SSL)
 
         target_compile_options (_poco_crypto PRIVATE -Wno-newline-eof)
         target_include_directories (_poco_crypto SYSTEM PUBLIC ${LIBRARY_DIR}/Crypto/include)
-        target_link_libraries (_poco_crypto PUBLIC Poco::Foundation ssl crypto)
+
+        find_package(OpenSSL)
+        set(OPENSSL_LIBRARIES "/usr/local/opt/openssl@3/lib/libssl.a;/usr/local/opt/openssl@3/lib/libcrypto.a")
+        message(STATUS "OPENSSL_INCLUDE_DIR - ${OPENSSL_INCLUDE_DIR}, OPENSSL_LIBRARIES - ${OPENSSL_LIBRARIES}, OPENSSL_VERSION - ${OPENSSL_VERSION}")
+        message(STATUS "OPENSSL_DIR - ${OPENSSL_DIR}, OPENSSL_ROOT_DIR - ${OPENSSL_ROOT_DIR}, OPENSSL_LIBRARY_DIR - ${OPENSSL_LIBRARY_DIR}")
+
+        target_include_directories (_poco_crypto SYSTEM PUBLIC ${OPENSSL_INCLUDE_DIR})
+
+        target_link_libraries (_poco_crypto PUBLIC Poco::Foundation ${OPENSSL_LIBRARIES})
+#        target_link_libraries (_poco_crypto PUBLIC Poco::Foundation OpenSSL::Crypto OpenSSL::SSL)
+
+
     else ()
         add_library (Poco::Crypto UNKNOWN IMPORTED GLOBAL)
 

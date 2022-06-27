@@ -480,6 +480,16 @@ int main()
     cout<< map_ret_test["b"] <<endl;
     cout<< sizeof(String) <<endl;
 
-    cout << "-------queue-------" << endl;
+    cout << "-------queue111-------" << endl;
+
+
+    int8_t aaaa_aab[2] = {1, 2};
+    unique_ptr<int8_t *> uniquePtr = std::make_unique<int8_t *>(aaaa_aab);
+    int8_t * ffffff = *uniquePtr;
+    int8_t fff = *(static_cast<int8_t *>(*uniquePtr));
+    cout << string(fff, 1) << endl;
+    cout << (char *)ffffff << endl;
+    int8_t bbb_aa = 1;
+    cout << bbb_aa << endl;
 
 }

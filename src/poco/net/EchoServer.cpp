@@ -28,7 +28,7 @@
 #include <Poco/Util/HelpFormatter.h>
 #include <iostream>
 
-#include "NewSockerAcceptor.h"
+#include "EchoServiceHandler.h"
 
 
 using Poco::Net::SocketReactor;
@@ -131,6 +131,7 @@ protected:
 
             // set-up a server socket
             ServerSocket svs(port);
+            svs.setBlocking(false);
             // set-up a SocketReactor...
             ParallelSocketReactor<SocketReactor> reactor;
             // ... and a SocketAcceptor
@@ -141,6 +142,7 @@ protected:
 //            thread.start(reactor);
             // wait for CTRL-C or kill
             waitForTerminationRequest();
+            Thread::sleep(10000000);
             // Stop the SocketReactor
             reactor.stop();
 //            thread.join();

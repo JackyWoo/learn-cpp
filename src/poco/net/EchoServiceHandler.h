@@ -69,30 +69,52 @@ public:
     void onFIFOOutReadable(bool& b)
     {
         if (b)
-            _reactor.addEventHandler(_socket, NObserver<EchoServiceHandler, WritableNotification>(*this, &EchoServiceHandler::onSocketWritable));
+        {
+            logger->information(format("add socket %s writable event", _socket.peerAddress().toString()));
+            _reactor.addEventHandler(
+                _socket, NObserver<EchoServiceHandler, WritableNotification>(*this, &EchoServiceHandler::onSocketWritable));
+        }
         else
-            _reactor.removeEventHandler(_socket, NObserver<EchoServiceHandler, WritableNotification>(*this, &EchoServiceHandler::onSocketWritable));
+        {
+            logger->information(format("remove socket %s writable event", _socket.peerAddress().toString()));
+            _reactor.removeEventHandler(
+                _socket, NObserver<EchoServiceHandler, WritableNotification>(*this, &EchoServiceHandler::onSocketWritable));
+        }
     }
 
     void onFIFOInWritable(bool& b)
     {
         if (b)
-            _reactor.addEventHandler(_socket, NObserver<EchoServiceHandler, ReadableNotification>(*this, &EchoServiceHandler::onSocketReadable));
+        {
+            logger->information(format("add socket %s readable event", _socket.peerAddress().toString()));
+            _reactor.addEventHandler(
+                _socket, NObserver<EchoServiceHandler, ReadableNotification>(*this, &EchoServiceHandler::onSocketReadable));
+        }
         else
-            _reactor.removeEventHandler(_socket, NObserver<EchoServiceHandler, ReadableNotification>(*this, &EchoServiceHandler::onSocketReadable));
+        {
+            logger->information(format("remove socket %s readable event", _socket.peerAddress().toString()));
+            _reactor.removeEventHandler(
+                _socket, NObserver<EchoServiceHandler, ReadableNotification>(*this, &EchoServiceHandler::onSocketReadable));
+        }
     }
 
     void onSocketReadable(const AutoPtr<ReadableNotification>& pNf)
     {
+        logger->information(format("socket %s is readable", _socket.peerAddress().toString()));
         try
         {
             int len = _socket.receiveBytes(_fifoIn);
+            logger->information("Socket readable event " +pNf->name()+ ", receive bytes " + std::to_string(len));
             if (len > 0)
             {
-                _fifoIn.drain(_fifoOut.write(_fifoIn.buffer(), _fifoIn.used()));
+                size_t size  = _fifoOut.write(_fifoIn.buffer(), _fifoIn.used());
+                logger->information("Socket write data length " + std::to_string(len));
+                if (size)
+                    _fifoIn.drain();
             }
             else
             {
+                logger->information(format("Socket %s readable but receive nothing, close it!", _socket.peerAddress().toString()));
                 delete this;
             }
         }
@@ -107,6 +129,7 @@ public:
     {
         try
         {
+            logger->information(format("socket %s is writable", _socket.peerAddress().toString()));
             _socket.sendBytes(_fifoOut);
         }
         catch (Poco::Exception& exc)
@@ -118,6 +141,7 @@ public:
 
     void onSocketShutdown(const AutoPtr<ShutdownNotification>& pNf)
     {
+        logger->information(format("socket %s shutdown", _socket.peerAddress().toString()));
         delete this;
     }
 
@@ -134,33 +158,3 @@ private:
     FIFOBuffer     _fifoIn;
     FIFOBuffer     _fifoOut;
 };
-
-template <class ServiceHandler>
-class NewSockerAcceptor : SocketAcceptor<ServiceHandler>
-{
-protected:
-    ServiceHandler* createServiceHandler(StreamSocket& socket) override;
-
-private:
-    ThreadPool pool;
-};
-
-template<class ServiceHandler>
-ServiceHandler *NewSockerAcceptor<ServiceHandler>::createServiceHandler(StreamSocket &socket) {
-//    pool.start([]()->{
-//        SocketReactor reactor;
-//        // ... and a SocketAcceptor
-//        SocketAcceptor<EchoServiceHandler> acceptor(socket, reactor);
-//        }, "NIO - " + socket.address().toString());
-//
-//    SocketReactor* pReactor = reactor(socket);
-//    if (!pReactor)
-//    {
-//        std::size_t next = _next++;
-//        if (_next == _reactors.size()) _next = 0;
-//        pReactor = _reactors[next];
-//    }
-//    pReactor->wakeUp();
-//    return new ServiceHandler(socket, *pReactor);
-    return nullptr;
-}

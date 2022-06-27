@@ -9,6 +9,7 @@ set(CMAKE_CXX_FLAGS -pthread)
 
 
 add_executable(test Test.cpp)
+add_executable(test2 Test2.cpp)
 
 target_compile_options(test
         PRIVATE
@@ -46,7 +47,7 @@ message(STATUS "USE_INTERNAL_POCO_LIBRARY = ${USE_INTERNAL_POCO_LIBRARY}" )
 #----------------------------------------- poco option -----------------------------
 set (USE_EPOLL 0)
 message(STATUS "USE_EPOLL = ${USE_EPOLL}" )
-set (ENABLE_SSL 0)
+set (ENABLE_SSL 1)
 message(STATUS "ENABLE_SSL = ${ENABLE_SSL}" )
 
 add_subdirectory(contrib)
@@ -54,4 +55,7 @@ add_subdirectory(contrib)
 
 #------------------------------------- cmake demo -------------------------
 add_subdirectory(cmake-demo)
+
+
+add_subdirectory(openssl-demp)
 

@@ -226,12 +226,13 @@ if (USE_INTERNAL_POCO_LIBRARY)
             POCO_ENABLE_CPP11
             POCO_OS_FAMILY_UNIX
     )
+
+    target_include_directories (_poco_foundation SYSTEM PUBLIC ${LIBRARY_DIR}/Foundation/include)
+
     find_package(ZLIB)
     message(STATUS "ZLIB_INCLUDE_DIR - ${ZLIB_INCLUDE_DIR}, ZLIB_LIBRARIES - ${ZLIB_LIBRARIES}")
-    find_package(OpenSSL)
-    message(STATUS "OPENSSL_INCLUDE_DIR - ${OPENSSL_INCLUDE_DIR}, OPENSSL_LIBRARIES - ${OPENSSL_LIBRARIES}")
-    target_include_directories (_poco_foundation SYSTEM PUBLIC ${LIBRARY_DIR}/Foundation/include)
-    target_link_libraries (_poco_foundation PRIVATE Poco::Foundation::PCRE ${ZLIB_LIBRARIES})
+
+    target_link_libraries (_poco_foundation PUBLIC Poco::Foundation::PCRE ${ZLIB_LIBRARIES})
 else ()
     add_library (Poco::Foundation UNKNOWN IMPORTED GLOBAL)
 
