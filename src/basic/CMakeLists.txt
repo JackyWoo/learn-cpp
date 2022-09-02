@@ -124,6 +124,7 @@ add_executable(gCommonMacroTest macro/CommonMacro.cpp)
 
 #------------- meta ----------------
 add_executable(HasMemberTest meta/HasMember.cpp)
+add_executable(ParameterPack meta/ParameterPack.cpp)
 
 #------------- enum ----------------
 add_executable(EnumTest enum/EnumTest.cpp)

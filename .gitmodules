@@ -1,3 +1,6 @@
 [submodule "contrib/poco"]
 	path = contrib/poco
 	url = https://github.com/pocoproject/poco.git
+[submodule "contrib/llvm-project"]
+	path = contrib/llvm-project
+	url = https://github.com/llvm/llvm-project.git
