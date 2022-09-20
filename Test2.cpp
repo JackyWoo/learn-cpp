@@ -23,6 +23,7 @@
 #include <tuple>
 #include <filesystem>
 #include <random>
+#include <limits>
 
 using namespace std;
 
@@ -90,8 +91,46 @@ int main()
     uint seed = (uint)( std::chrono::system_clock::now()
                            .time_since_epoch().count() * 1 );
     std::default_random_engine engine(seed);
-    std::uniform_int_distribution<int32_t>
-        distribution( 0, 5 / 2 );
-    cout << 5 / 2 + distribution(engine) << endl;
+
+    for (int m=0; m< 1000; m++)
+    {
+        std::uniform_int_distribution<int32_t>distribution( 0, 10000 );
+        int n = distribution(engine);
+        int ra = n % 40 % 10;
+        int rb = n % 10;
+        if ( ra != rb)
+            cout << "not equal " << n << endl;
+    }
+
+    uint32_t ui = 2484513939;
+    cout << static_cast<int32_t >(ui) <<endl;
+
+    int64_t tttl = -50;
+    int64_t r = tttl >> 32;
+    cout << r <<endl;
+    struct Long
+    {
+        int low;
+        int high;
+    };
+    Long * l = reinterpret_cast<Long *>(&r);
+    l->high = 0;
+    auto * rr = reinterpret_cast<uint64_t *>(l);
+    cout << *rr <<endl;
+
+    cout << static_cast<int32_t>(tttl) <<endl;
+
+
+    const char * ss = "123";
+    std::string sss = "123";
+    cout << sizeof (sss) << endl;
+
+    cout << "--------------shift-------------"<<endl;
+    uint32_t uu = std::numeric_limits<uint32_t >::max();
+    cout << static_cast<int32_t >(uu)<<  " -- " << (uu >> 16) << endl;
+
+#if 1 == 2 || 2 == 2
+    cout << 1 << endl;
+#endif
 
 }
