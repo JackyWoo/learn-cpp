@@ -1,11 +1,11 @@
-add_subdirectory(src)
 add_subdirectory(contrib)
+add_subdirectory(src)
 
 add_executable(Main Main.cpp)
 
 target_link_libraries(Main
     PRIVATE B
-    INTERFACE B
+#    INTERFACE B
 )
 
 get_target_property(Main_INCLUDE_DIRECTORIES Main INCLUDE_DIRECTORIES)

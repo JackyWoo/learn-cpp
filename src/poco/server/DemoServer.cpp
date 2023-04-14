@@ -2,7 +2,6 @@
 // Created by wujianchao5 on 2022/6/18.
 //
 #include <Poco/util/ServerApplication.h>
-#include <Poco/Util/ServerApplication.h>
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionSet.h>
 #include <Poco/Util/HelpFormatter.h>
@@ -10,6 +9,7 @@
 #include <Poco/TaskManager.h>
 #include <Poco/DateTimeFormatter.h>
 #include <iostream>
+#include <Poco/NumberFormatter.h>
 
 
 using Poco::Util::Application;
@@ -52,6 +52,17 @@ public:
     }
 
 protected:
+
+    void addSubsystem(Subsystem* pSubsystem)
+    {
+        Application::addSubsystem(pSubsystem);
+    }
+
+    const char* name() const override
+    {
+        return "DemoServer";
+    }
+
     void initialize(Application& self)
     {
         loadConfiguration(); // load default configuration files, if present
@@ -74,7 +85,12 @@ protected:
                 .required(false)
                 .repeatable(false)
                 .callback(OptionCallback<DemoServer>(this, &DemoServer::handleHelp)));
+
+        options.addOption(
+            Option("host", "h", "host address")
+            .required(true));
     }
+
 
     void handleHelp(const std::string& name, const std::string& value)
     {
@@ -94,20 +110,30 @@ protected:
 
     int main(const ArgVec& args)
     {
-        if (!_helpRequested)
+        std::string sub_cmd = config().getString("application.argv[" + Poco::NumberFormatter::format(1) + "]", "");
+
+        if (sub_cmd == "print")
         {
-            TaskManager tm;
-            tm.start(new SampleTask);
-            waitForTerminationRequest();
-            tm.cancelAll();
-            tm.joinAll();
+            /// execute print
         }
+        else
+        {
+            /// execute default command
+            if (!_helpRequested)
+            {
+                TaskManager tm;
+                tm.start(new SampleTask);
+                waitForTerminationRequest();
+                tm.cancelAll();
+                tm.joinAll();
+            }
+        }
+
         return Application::EXIT_OK;
     }
 	
 private:
     bool _helpRequested;
 };
-
 
 POCO_SERVER_MAIN(DemoServer)

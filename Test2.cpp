@@ -3,27 +3,22 @@
 //
 
 #include <atomic>
+#include <deque>
+#include <filesystem>
 #include <functional>
 #include <iostream>
+#include <limits>
 #include <list>
 #include <map>
 #include <mutex>
 #include <queue>
+#include <random>
 #include <regex>
 #include <shared_mutex>
 #include <sstream>
 #include <thread>
-#include <type_traits>
-#include <unordered_map>
-#include <unordered_set>
-#include <fcntl.h>
-#include <unistd.h>
-#include <deque>
-#include <sys/event.h>
 #include <tuple>
-#include <filesystem>
-#include <random>
-#include <limits>
+#include <unordered_map>
 
 using namespace std;
 
@@ -47,7 +42,6 @@ void format(int value, Options options = OPT_NONE)
 
 int main()
 {
-
     int16_t aaaa_aab[2] = {1, 2};
     unique_ptr<int16_t *> uniquePtr = std::make_unique<int16_t *>(aaaa_aab);
 
@@ -59,8 +53,8 @@ int main()
     cout << *(aa) << endl;
     cout << *(bb) << endl;
 
-//    cout << **(uniquePtr.get()) << endl;
-//    cout << **(uniquePtr.release()) << endl;
+    //    cout << **(uniquePtr.get()) << endl;
+    //    cout << **(uniquePtr.release()) << endl;
 
     /// eventfd test buffer
 
@@ -70,44 +64,43 @@ int main()
 
     unordered_map<int32_t, int32_t> amap;
 
-    cout << &amap<<endl;
+    cout << &amap << endl;
     amap[1] = 1;
-    cout << &amap<<endl;
+    cout << &amap << endl;
     amap[1] = 2;
-    cout << &amap<<endl;
+    cout << &amap << endl;
     amap[2] = 2;
-    cout << &amap<<endl;
+    cout << &amap << endl;
 
 
-    int32_t  i = 3;
-    cout << (i & ~1)<<endl;
+    int32_t i = 3;
+    cout << (i & ~1) << endl;
 
     Foo * foo_prt = new Foo();
     void * ptr = foo_prt;
     auto * cast_ptr = static_cast<Foo *>(ptr);
     cout << (cast_ptr == nullptr) << endl;
 
-    cout << "--------------random-------------"<<endl;
-    uint seed = (uint)( std::chrono::system_clock::now()
-                           .time_since_epoch().count() * 1 );
+    cout << "--------------random-------------" << endl;
+    uint seed = (uint)(std::chrono::system_clock::now().time_since_epoch().count() * 1);
     std::default_random_engine engine(seed);
 
-    for (int m=0; m< 1000; m++)
+    for (int m = 0; m < 1000; m++)
     {
-        std::uniform_int_distribution<int32_t>distribution( 0, 10000 );
+        std::uniform_int_distribution<int32_t> distribution(0, 10000);
         int n = distribution(engine);
         int ra = n % 40 % 10;
         int rb = n % 10;
-        if ( ra != rb)
+        if (ra != rb)
             cout << "not equal " << n << endl;
     }
 
     uint32_t ui = 2484513939;
-    cout << static_cast<int32_t >(ui) <<endl;
+    cout << static_cast<int32_t>(ui) << endl;
 
     int64_t tttl = -50;
     int64_t r = tttl >> 32;
-    cout << r <<endl;
+    cout << r << endl;
     struct Long
     {
         int low;
@@ -116,21 +109,33 @@ int main()
     Long * l = reinterpret_cast<Long *>(&r);
     l->high = 0;
     auto * rr = reinterpret_cast<uint64_t *>(l);
-    cout << *rr <<endl;
+    cout << *rr << endl;
 
-    cout << static_cast<int32_t>(tttl) <<endl;
+    cout << static_cast<int32_t>(tttl) << endl;
 
 
     const char * ss = "123";
     std::string sss = "123";
-    cout << sizeof (sss) << endl;
+    cout << sizeof(sss) << endl;
 
-    cout << "--------------shift-------------"<<endl;
-    uint32_t uu = std::numeric_limits<uint32_t >::max();
-    cout << static_cast<int32_t >(uu)<<  " -- " << (uu >> 16) << endl;
+    cout << "--------------shift-------------" << endl;
+    uint32_t uu = std::numeric_limits<uint32_t>::max();
+    cout << static_cast<int32_t>(uu) << " -- " << (uu >> 16) << endl;
 
 #if 1 == 2 || 2 == 2
     cout << 1 << endl;
 #endif
 
+    try
+    {
+        throw;
+    }
+    catch (std::exception e)
+    {
+        cout << "caught excepthon e";
+    }
+    catch (...)
+    {
+        cout << "caught something";
+    }
 }
