@@ -8,9 +8,9 @@
 
 using namespace std;
 
-struct Foo
+struct MyQueue
 {
-    Foo(const string & name, int age) : _name(name), _age(age)
+    MyQueue(const string & name, int age) : _name(name), _age(age)
     {
     }
     string _name;
@@ -30,7 +30,7 @@ struct Bar
 int main()
 {
     auto args = std::make_tuple<string, int>("Jacky", 20);
-    auto * foo = ObjectCreator<Foo, string, int>::create(args);
+    auto * foo = ObjectCreator<MyQueue, string, int>::create(args);
     cout << foo->_name << foo->_age << endl;
 
     auto args2 = std::make_tuple();

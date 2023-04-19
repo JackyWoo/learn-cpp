@@ -6,34 +6,35 @@
 #include <iostream>
 #include <type_traits>
 
-class Foo {
+class MyQueue
+{
 public:
-    Foo() { std::cout << "Foo Default constructor\n"; }
-    Foo(const Foo &) { std::cout << "Foo Copy\n"; }
-    Foo(Foo &&)  noexcept { std::cout << "Foo Move\n"; }
+    MyQueue() { std::cout << "Foo Default constructor\n"; }
+    MyQueue(const MyQueue &) { std::cout << "Foo Copy\n"; }
+    MyQueue(MyQueue &&)  noexcept { std::cout << "Foo Move\n"; }
 };
 
-std::aligned_storage<sizeof(Foo)> contents;
-Foo &alias = *reinterpret_cast<Foo *>(&contents);
+std::aligned_storage<sizeof(MyQueue)> contents;
+MyQueue &alias = *reinterpret_cast<MyQueue *>(&contents);
 
-void ByVal(Foo a) {
-    new(&contents) Foo(std::move(a));
-    alias.~Foo();
+void ByVal(MyQueue a) {
+    new(&contents) MyQueue(std::move(a));
+    alias.~MyQueue();
 }
 
-void ByLCRef(Foo const &a) {
-    new(&contents) Foo(a);
-    alias.~Foo();
+void ByLCRef(MyQueue const &a) {
+    new(&contents) MyQueue(a);
+    alias.~MyQueue();
 }
 
-void ByRRef(Foo &&a) {
-    new(&contents) Foo(std::move(a));
-    alias.~Foo();
+void ByRRef(MyQueue &&a) {
+    new(&contents) MyQueue(std::move(a));
+    alias.~MyQueue();
 }
 
 int main() {
     std::cout << "Foo a\n";
-    Foo a;
+    MyQueue a;
     std::cout << "\n";
 
     std::cout << "ByVal(a);\n";
@@ -43,7 +44,7 @@ int main() {
     ByVal(std::move(a));
 
     std::cout << "\nByVal(Foo());\n";
-    ByVal(Foo());
+    ByVal(MyQueue());
 
     std::cout << "\nByLCRef(a);\n";
     ByLCRef(a);
@@ -52,5 +53,5 @@ int main() {
     ByRRef(std::move(a));
 
     std::cout << "\nByRRef(Foo());\n";
-    ByRRef(Foo());
+    ByRRef(MyQueue());
 }

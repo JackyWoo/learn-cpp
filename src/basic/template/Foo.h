@@ -8,7 +8,8 @@
 #include <memory>
 
 template<typename T>
-class Foo {
+class MyQueue
+{
 
 public:
     void show();

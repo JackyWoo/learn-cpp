@@ -65,6 +65,7 @@ add_executable(NullPtrTest x_ptr/NullPtrTest.cpp)
 
 add_executable(RefTest ref/RefTest.cpp)
 add_executable(RefTest2 ref/RefTest2.cpp)
+add_executable(RefTest3 ref/RefTest3.cpp)
 
 #--------------  thread --------------
 

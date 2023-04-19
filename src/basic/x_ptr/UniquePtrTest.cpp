@@ -9,14 +9,14 @@
 using String = std::string;
 using namespace std;
 
-struct Foo
+struct MyQueue
 {
     String name;
-    explicit Foo(const String & name_)
+    explicit MyQueue(const String & name_)
     {
         this->name = name_;
     }
-    ~Foo() { cout << "destroy : " << name << endl; }
+    ~MyQueue() { cout << "destroy : " << name << endl; }
 };
 
 void test()
@@ -120,13 +120,13 @@ void test10()
 
 void test20()
 {
-    std::unique_ptr<Foo> ptr1 = make_unique<Foo>("Jacky");
-    std::unique_ptr<Foo> ptr2 = make_unique<Foo>("Tom");
+    std::unique_ptr<MyQueue> ptr1 = make_unique<MyQueue>("Jacky");
+    std::unique_ptr<MyQueue> ptr2 = make_unique<MyQueue>("Tom");
     ptr1 = move(ptr2);
     cout<< "aa" <<endl;
 
-    std::shared_ptr<Foo> sptr1 = make_shared<Foo>("car");
-    std::shared_ptr<Foo> sptr2 = make_shared<Foo>("bike");
+    std::shared_ptr<MyQueue> sptr1 = make_shared<MyQueue>("car");
+    std::shared_ptr<MyQueue> sptr2 = make_shared<MyQueue>("bike");
     sptr1 = sptr2;
     cout<< "aa" <<endl;
 }

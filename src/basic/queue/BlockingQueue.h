@@ -5,7 +5,7 @@
 #ifndef LEARN_CPP_BLOCKINGQUEUE_H
 #define LEARN_CPP_BLOCKINGQUEUE_H
 
-#include <list>
+#include <queue>
 #include <mutex>
 #include <climits>
 #include <iostream>
@@ -20,25 +20,28 @@ class BlockingQueue
 {
 
 public:
-    explicit BlockingQueue(int maxSize = INT32_MAX);
+    explicit BlockingQueue(int maxSize = INT_MAX);
 
     T take();
 
     void push(T&& e);
+    void push(const T& e);
 
     bool isEmpty();
 
 private:
-    int maxSize;
-    std::list<T> queue;
+    int maxSize{};
+    std::queue<T> queue;
 
-    std::recursive_mutex mutex;
+    std::mutex mutex;
 
-    std::condition_variable_any canTake;
-    std::condition_variable_any canPush;
+    std::condition_variable canTake;
+    std::condition_variable canPush;
 
     bool isFull();
+    template <typename ... Args> void pushImpl(Args &&...args);
 };
+
 
 template <typename T>
 BlockingQueue<T>::BlockingQueue(int maxSize)
@@ -46,36 +49,53 @@ BlockingQueue<T>::BlockingQueue(int maxSize)
     this->maxSize = maxSize;
 }
 
-template <typename T>
-void BlockingQueue<T>::push(T&& e)
+template <typename T> template <typename... Args>
+void BlockingQueue<T>::pushImpl(Args &&... args)
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex);
+    std::cout << "pushImpl" << std::endl;
+//    std::cout << &args << std::endl;
+    std::unique_lock<std::mutex> lock(mutex);
 
-    while(isFull())
+    while(queue.size() == maxSize)
     {
-        canPush.wait(mutex);
+        canPush.wait(lock);
     }
 
-    //push
-    queue.push_back(e);
+    // emplace
+    queue.emplace(std::forward<Args>(args)...);
     // notify waiters
     canTake.notify_all();
 }
 
+template <typename T>
+void BlockingQueue<T>::push(const T& e)
+{
+    std::cout << "push const &" << std::endl;
+    std::cout << &e << std::endl;
+    pushImpl(e);
+}
+
+template <typename T>
+void BlockingQueue<T>::push(T&& e)
+{
+    std::cout << "push &&" << std::endl;
+    std::cout << &e << std::endl;
+    pushImpl(std::forward<T>(e));
+}
 
 template <typename T>
 T BlockingQueue<T>::take()
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
 
-    while (isEmpty())
+    while (queue.empty())
     {
-        canTake.wait(mutex);
+        canTake.wait(lock);
     }
 
     // take
-    T e = *queue.cbegin();
-    queue.erase(queue.cbegin());
+    T e = std::move(queue.front());
+    queue.pop();
 
     // notify waiters
     canPush.notify_all();
@@ -85,14 +105,14 @@ T BlockingQueue<T>::take()
 template<typename T>
 bool BlockingQueue<T>::isEmpty()
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
     return queue.size() == 0;
 }
 
 template<typename T>
 bool BlockingQueue<T>::isFull()
 {
-    std::lock_guard<std::recursive_mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
     return queue.size() == maxSize;
 }
 
