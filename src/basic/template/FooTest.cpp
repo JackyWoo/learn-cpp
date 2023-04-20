@@ -4,6 +4,6 @@
 #include "Foo.h"
 
 int main(){
-    MyQueue<int> foo;
+    Queue1<int> foo;
     foo.show();
 }

@@ -22,7 +22,7 @@
 
 using namespace std;
 
-struct MyQueue
+struct Queue1
 {
     int32_t a;
     int32_t b;
@@ -76,9 +76,9 @@ int main()
     int32_t i = 3;
     cout << (i & ~1) << endl;
 
-    MyQueue * foo_prt = new MyQueue();
+    Queue1 * foo_prt = new Queue1();
     void * ptr = foo_prt;
-    auto * cast_ptr = static_cast<MyQueue *>(ptr);
+    auto * cast_ptr = static_cast<Queue1 *>(ptr);
     cout << (cast_ptr == nullptr) << endl;
 
     cout << "--------------random-------------" << endl;

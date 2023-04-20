@@ -9,6 +9,7 @@
 
 struct Pos
 {
+    Pos() { }
     std::string a;
     std::string b;
 
@@ -16,6 +17,30 @@ struct Pos
 
     Pos(const Pos & other) : a(other.a), b(other.b) { std::cout << "copy constructor\n"; }
     Pos(Pos && other) : a(std::move(other.a)), b(std::move(other.b)) { std::cout << "move constructor\n"; }
+
+    // copy = operator
+    Pos & operator=(const Pos & other)
+    {
+        std::cout << "copy =\n";
+        if (this != &other)
+        {
+            a = other.a;
+            b = other.b;
+        }
+        return *this;
+    }
+
+    // move = operator
+    Pos & operator=(Pos && other)
+    {
+        std::cout << "move =\n";
+        if (this != &other)
+        {
+            a = std::move(other.a);
+            b = std::move(other.b);
+        }
+        return *this;
+    }
 
     friend std::ostream & operator<<(std::ostream & os, const Pos & pos)
     {
@@ -25,49 +50,65 @@ struct Pos
 };
 
 template <typename T>
-class MyQueue
+class Queue1
 {
 private:
     std::queue<T> queue;
 
 public:
-    MyQueue() = default;
+    Queue1() = default;
+
     void push(T && value)
     {
-        std::cout << "push T&&\n";
+        std::cout << "Queue1 push T&&\n";
         queue.push(std::forward<T>(value));
     }
+
     void push(const T & value)
     {
-        std::cout << "const push T&\n";
+        std::cout << "Queue1 const push T&\n";
         queue.push(value);
     }
 };
 
-void bar(const Pos & value)
-{
-    std::cout << "rvalue" << std::endl;
-}
 
-void bar(Pos && value)
+class Queue2
 {
-    std::cout << "lvalue" << std::endl;
-}
+private:
+    std::queue<Pos> queue;
 
-template <typename T>
-void foo(T && value)
-{
-    bar(std::forward<T>(value));
-}
+public:
+    Queue2() = default;
+
+    template <typename T>
+    void push(T && value)
+    {
+        std::cout << "Queue2 push T&&\n";
+        queue.push(std::forward<T>(value));
+    }
+
+    void pop(Pos & pos)
+    {
+        pos = queue.front(); // copy = operator
+        // pos = std::move(queue.front()); // move = operator
+        queue.pop();
+    }
+};
 
 int main()
 {
-    Pos pos("1", "2");
+    //    Pos pos1("1", "2");
+    //
+    //    Queue1<Pos> queue1;
+    //    queue1.push(pos1);
+    //    queue1.push(std::move(pos1));
 
-    foo(pos);
-    foo<Pos>({"1", "2"});
+    Pos pos2("1", "2");
+    Queue2 queue2;
 
-    MyQueue<Pos> queue;
-    queue.push(pos);
-    queue.push(std::move(pos));
+    queue2.push(pos2); // invoke push T&&
+    queue2.push(std::move(pos2)); // invoke push T&&
+
+    Pos pos;
+    queue2.pop(pos);
 }

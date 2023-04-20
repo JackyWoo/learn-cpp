@@ -8,7 +8,7 @@
 #include <memory>
 
 template<typename T>
-class MyQueue
+class Queue1
 {
 
 public:

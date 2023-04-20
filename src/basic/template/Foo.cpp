@@ -5,11 +5,11 @@
 #include "Foo.h"
 
 template<typename T>
-void MyQueue<T>::show(){
+void Queue1<T>::show(){
     // do nothing
 }
 
-template class MyQueue<int>;
+template class Queue1<int>;
 //std::unique_ptr<GlobalFoo> GlobalFoo::the_instance;
 //
 ////void hello(){
