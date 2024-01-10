@@ -7,21 +7,34 @@
 #include <queue>
 #include <type_traits>
 
-struct Pos
+struct Foo
 {
-    Pos() { }
+    Foo()
+    {
+        std::cout << "invoke Foo constructor\n";
+    }
+
     std::string a;
     std::string b;
 
-    Pos(const std::string & a, const std::string & b) : a(a), b(b) { }
+    Foo(const std::string & a, const std::string & b) : a(a), b(b) { }
 
-    Pos(const Pos & other) : a(other.a), b(other.b) { std::cout << "copy constructor\n"; }
-    Pos(Pos && other) : a(std::move(other.a)), b(std::move(other.b)) { std::cout << "move constructor\n"; }
+    // copy constructor
+    Foo(const Foo & other) : a(other.a), b(other.b)
+    {
+        std::cout << "invoke Foo copy constructor\n";
+    }
+
+    // move constructor
+    Foo(Foo && other) : a(std::move(other.a)), b(std::move(other.b))
+    {
+        std::cout << "invoke Foo move constructor\n";
+    }
 
     // copy = operator
-    Pos & operator=(const Pos & other)
+    Foo & operator=(const Foo & other)
     {
-        std::cout << "copy =\n";
+        std::cout << "invoke Foo copy = operator\n";
         if (this != &other)
         {
             a = other.a;
@@ -31,9 +44,9 @@ struct Pos
     }
 
     // move = operator
-    Pos & operator=(Pos && other)
+    Foo & operator=(Foo && other) noexcept
     {
-        std::cout << "move =\n";
+        std::cout << "invoke Foo move = operator\n";
         if (this != &other)
         {
             a = std::move(other.a);
@@ -42,9 +55,9 @@ struct Pos
         return *this;
     }
 
-    friend std::ostream & operator<<(std::ostream & os, const Pos & pos)
+    friend std::ostream & operator<<(std::ostream & os, const Foo & foo)
     {
-        os << "a: " << pos.a << " b: " << pos.b;
+        os << "a: " << foo.a << " b: " << foo.b;
         return os;
     }
 };
@@ -58,10 +71,12 @@ private:
 public:
     Queue1() = default;
 
+    // (1) value is not a universal reference, method just receives a rvalue
     void push(T && value)
     {
         std::cout << "Queue1 push T&&\n";
-        queue.push(std::forward<T>(value));
+        // (2) here value is a lvalue, we need cast it to rvalue by std::move.
+        queue.push(std::move(value));
     }
 
     void push(const T & value)
@@ -69,46 +84,78 @@ public:
         std::cout << "Queue1 const push T&\n";
         queue.push(value);
     }
+
+    void pop(Foo & foo)
+    {
+        // (5) value of queue.front() is a lvalue, will use copy = operator
+        //foo = queue.front();
+        // (6) move method translate value of queue.front() to a rvalue,
+        //     and will use move = operator
+        foo = std::move(queue.front());
+        queue.pop();
+    }
 };
 
 
 class Queue2
 {
 private:
-    std::queue<Pos> queue;
+    std::queue<Foo> queue;
 
 public:
     Queue2() = default;
 
+    // (3) value is a universal reference who can match both rvalue and lvalue
     template <typename T>
     void push(T && value)
     {
         std::cout << "Queue2 push T&&\n";
+        // (4) here value is a lvalue, we need cast it to what it originally was by std::forward,
+        //     and this is called perfect forward.
         queue.push(std::forward<T>(value));
     }
 
-    void pop(Pos & pos)
+    void pop(Foo & foo)
     {
-        pos = queue.front(); // copy = operator
-        // pos = std::move(queue.front()); // move = operator
+        // use copy = operator
+        foo = queue.front();
+        // move method translate value of queue.front() to a rvalue
+        // use move = operator
+        // foo = std::move(queue.front());
         queue.pop();
     }
 };
 
+
+// copy elision case
+Foo f()
+{
+    std::cout << "invoke f" << std::endl;
+    return Foo();  // only one call to default constructor of Foo
+}
+
+
 int main()
 {
-    //    Pos pos1("1", "2");
+//    Foo foo1("1", "2");
+//
+//    Queue1<Foo> queue1;
+////    queue1.push(foo1);            // invoke push const T&
+//    queue1.push(std::move(foo1));   // invoke push T&&
+//    Foo foo;
+//    queue1.pop(foo);
+
+    //    Foo foo2("1", "2");
+    //    Queue2 queue2;
     //
-    //    Queue1<Pos> queue1;
-    //    queue1.push(pos1);
-    //    queue1.push(std::move(pos1));
+    //    queue2.push(foo2);              // invoke push T&&
+    //    queue2.push(std::move(foo2));   // invoke push T&&
+    //
+    //    Foo foo;
+    //    queue2.pop(foo);
 
-    Pos pos2("1", "2");
-    Queue2 queue2;
+    Foo foo = f();
 
-    queue2.push(pos2); // invoke push T&&
-    queue2.push(std::move(pos2)); // invoke push T&&
-
-    Pos pos;
-    queue2.pop(pos);
+    // temporary materialization
+    const Foo & tm = {};
 }

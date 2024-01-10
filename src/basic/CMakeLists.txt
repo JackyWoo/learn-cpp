@@ -3,7 +3,6 @@
 add_executable(TypeTest type/TypeTest.cpp )
 add_executable(structTest type/StructTest.cpp type/Person.h type/Uu.cpp type/Color.h)
 add_executable(pointerTest type/Pointer.cpp)
-add_executable(ArrayTest type/ArrayTest.cpp clib/CCTypeTest.cpp)
 add_executable(ReferenceTest type/ReferenceTest.cpp)
 add_executable(StringTest type/StringTest.cpp)
 
@@ -77,6 +76,7 @@ add_executable(BackReturnTypeTest cpp11/BackReturnTypeTest.cpp)
 add_executable(DefaultTemplateArgName cpp11/DefaultTemplateArgName.cpp)
 add_executable(InitObjectTest cpp11/InitObjectTest.cpp)
 add_executable(MoveConstructorTest cpp11/MoveConstructorTest.cpp)
+target_compile_options(MoveConstructorTest PUBLIC -std=c++11 -fno-elide-constructors)
 add_executable(MoveConstructorTest2 cpp11/MoveConstructorTest2.cpp)
 add_executable(MoveConstructorTest3 cpp11/MoveConstructorTest3.cpp)
 add_executable(ArgDeliverTest cpp11/PerfectForwarding.cpp)
@@ -133,3 +133,9 @@ add_executable(EnumTest enum/EnumTest.cpp)
 
 #------------- LambdaTest----------------
 add_executable(LambdaTest lambda/LambdaTest.cpp)
+
+#------------- AlignmentTest----------------
+add_executable(AlignmentTest memory/AlignmentTest.cpp)
+
+
+

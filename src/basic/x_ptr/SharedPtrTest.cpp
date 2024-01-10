@@ -88,22 +88,23 @@ void test3()
     ptr1.reset();
 }
 
-struct Pos {
-    Pos(int a_, int b_): a(a_), b(b_){};
-    Pos(const Pos & p): a(p.a), b(p.b){};
+struct Foo
+{
+    Foo(int a_, int b_): a(a_), b(b_){};
+    Foo(const Foo & p): a(p.a), b(p.b){};
     int a;
     int b;
 
 };
 
 struct PosInvoker {
-    PosInvoker(Pos & p_): p(p_){};
-    Pos p;
+    PosInvoker(Foo & p_): p(p_){};
+    Foo p;
 };
 
 std::shared_ptr<PosInvoker> stackTest()
 {
-    Pos p(1, 2);
+    Foo p(1, 2);
     return std::make_shared<PosInvoker>(p);
 }
 

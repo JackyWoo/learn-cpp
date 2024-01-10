@@ -135,15 +135,6 @@ IntVector generate1(int size)
     return IntVector(size);
 }
 
-IntVector & generate2(int size)
-{
-    IntVector vec(size);
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wreturn-stack-address"
-    return vec;
-#pragma clang diagnostic pop
-}
-
 
 int main()
 {

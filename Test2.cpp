@@ -126,6 +126,9 @@ int main()
     cout << 1 << endl;
 #endif
 
+    auto * queue_ptr = new Queue1(1, 1);
+    cout << "queue_ptr address:" << reinterpret_cast<uint64_t>(queue_ptr) << endl;
+
     try
     {
         throw;
@@ -138,4 +141,5 @@ int main()
     {
         cout << "caught something";
     }
+
 }

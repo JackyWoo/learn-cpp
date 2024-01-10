@@ -17,7 +17,7 @@
 #include <unordered_set>
 #include <fcntl.h>
 #include <unistd.h>
-#include <deque>
+#include <bit>
 
 using Task = std::function<void()>;
 
@@ -66,17 +66,6 @@ int main()
     priority_queue<int> queue;
     // seg fault
     //    int a = queue.top();
-
-    std::vector<String> cluster_nodes = {"1"};
-    std::vector<String> user_initialized_nodes = {"1"};
-    std::vector<String> must_finished_nodes;
-    std::set_intersection(
-        cluster_nodes.cbegin(),
-        cluster_nodes.cend(),
-        user_initialized_nodes.cbegin(),
-        user_initialized_nodes.cend(),
-        std::insert_iterator<std::vector<String>>(must_finished_nodes, must_finished_nodes.begin()));
-    cout << must_finished_nodes.size() << endl;
 
     std::cout << sizeof(unsigned long long) << std::endl;
     std::cout << sizeof(unsigned long) << std::endl;
@@ -341,11 +330,6 @@ int main()
         ss15 = "m_" + ss15;
     }
 
-    std::replace_if(
-        ss15.begin(), ss15.end(), [](char c) { return !(isalnum(c) || c == '_' || c == ':'); }, '_');
-    cout << ss15 << endl;
-    cout << isalnum('_') << endl;
-
     String metric_name = "0_a0a-b--b--";
     metric_name = std::regex_replace(metric_name, std::regex("[^a-zA-Z0-9_:]"), "_");
     cout << metric_name << endl;
@@ -392,31 +376,6 @@ int main()
     unordered_map<int64_t, int64_t> mmmmp;
 
     cout << mmmmp[0] << endl;
-
-
-    cout << "-------mm-------" << endl;
-    unordered_map<int64_t, int64_t> tsmap;
-    for (int i = 0; i < 10; i++)
-        tsmap[i] = i;
-
-    thread t_map([&tsmap] {
-        auto it = tsmap.cbegin();
-        while (it != tsmap.cend())
-        {
-            cout << it->second << endl;
-            this_thread::sleep_for(chrono::microseconds(100));
-            it++;
-        }
-    });
-
-    this_thread::sleep_for(chrono::microseconds(100));
-    tsmap.insert_or_assign(11, 11);
-    tsmap.erase(1);
-    tsmap.erase(9);
-    cout << "size " << tsmap.size() << endl;
-    t_map.join();
-    cout << "size " << tsmap.size() << endl;
-
 
     cout << "-------alignment-------" << endl;
     struct Foo100
@@ -491,5 +450,60 @@ int main()
     cout << (char *)ffffff << endl;
     int8_t bbb_aa = 1;
     cout << bbb_aa << endl;
+
+    cout << "-------lower to upper-------" << endl;
+    const auto flip_case_mask = 'A' ^ 'a';
+    uint8_t ccc1 = 'b';
+    cout << (0 ^ 0) << endl;
+
+    cout << "-------string-------" << endl;
+    String ss111 = "0000000000";
+    cout<< sizeof(String) <<endl;
+    cout<< "capacity: " << ss111.capacity() << ", size: " << ss111.size() << endl;
+
+    cout << "-------bit test-------" << endl;
+    uint64_t bit_a = 7;
+    cout << __builtin_clzll(bit_a) << endl;
+    uint8_t bit_b = reinterpret_cast<uint8_t*>(&bit_a)[0];
+    cout << bit_b << endl;
+
+    cout << "-------atomic test-------" << endl;
+    struct RangesPos
+    {
+        size_t x;
+        size_t y;
+    };
+
+    using AtomicRangePos = std::atomic<RangesPos>;
+    AtomicRangePos pos11({1, 1});
+    RangesPos start = pos11.load();
+    RangesPos end(2, 2);
+    pos11.compare_exchange_strong(start, end);
+    cout << pos11.load().x << endl;
+
+    struct RangesState
+    {
+        RangesPos pos;
+        mutable std::mutex mutex;
+    };
+
+    using RangesStatePtr = std::shared_ptr<RangesState>;
+    auto state_ptr = std::make_shared<RangesState>();
+//    state_ptr->pos = {1, 1};
+    std::lock_guard lock(state_ptr->mutex);
+    cout << state_ptr->pos.x << endl;
+
+    cout << "-------double overflow test-------" << endl;
+    double double_max = std::numeric_limits<double>::max();
+    double long_max = std::numeric_limits<uint64_t>::max();
+    double d1235 = double_max + double_max / 2;
+    cout << d1235 << endl;
+    cout << d1235 / 2 << endl;
+    cout << (d1235 > d1235 / 2) << endl;
+    cout << (d1235 > double_max) << endl;
+    cout << (d1235 > 1.0) << endl;
+
+    cout << "max value of double larger than max value of long? " << (double_max > long_max) << endl;
+
 
 }

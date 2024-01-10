@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(LEARN_CPP)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS_DEBUG )
 set(CMAKE_CXX_FLAGS -pthread)
 
@@ -10,6 +10,7 @@ set(CMAKE_CXX_FLAGS -pthread)
 
 add_executable(test Test.cpp)
 add_executable(test2 Test2.cpp)
+add_executable(range Range.cpp)
 
 target_compile_options(test
         PRIVATE

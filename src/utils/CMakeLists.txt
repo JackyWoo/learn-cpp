@@ -21,3 +21,5 @@ target_link_libraries(ByteBufferTest utils)
 
 add_executable(ObjectCreatorTest ObjectCreatorTest.cpp)
 target_link_libraries(ObjectCreatorTest utils)
+
+add_executable(LevenshteinDistanceTest LevenshteinDistanceTest.cpp)

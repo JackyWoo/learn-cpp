@@ -19,17 +19,17 @@ void consume(BlockingQueue<int> & queue);
 void test();
 void simpleTest();
 
-struct Pos
+struct Foo
 {
     std::string a;
     std::string b;
 
-    Pos(const std::string & a, const std::string & b) : a(a), b(b) { }
+    Foo(const std::string & a, const std::string & b) : a(a), b(b) { }
 
-    Pos(const Pos & other) : a(other.a), b(other.b) { std::cout << "copy constructor\n"; }
-    Pos(Pos && other) : a(std::move(other.a)), b(std::move(other.b)) { std::cout << "move constructor\n"; }
+    Foo(const Foo & other) : a(other.a), b(other.b) { std::cout << "copy constructor\n"; }
+    Foo(Foo && other) : a(std::move(other.a)), b(std::move(other.b)) { std::cout << "move constructor\n"; }
 
-    friend std::ostream & operator<<(std::ostream & os, const Pos & pos)
+    friend std::ostream & operator<<(std::ostream & os, const Foo & pos)
     {
         os << "a: " << pos.a << " b: " << pos.b;
         return os;
@@ -60,8 +60,8 @@ void test()
 
 void simpleTest()
 {
-    BlockingQueue<Pos> queue(2);
-    Pos e1("1", "2");
+    BlockingQueue<Foo> queue(2);
+    Foo e1("1", "2");
     queue.push(e1);
 //    queue.push({"1", "2"});
     std::cout << "after push " << e1 << std::endl;
