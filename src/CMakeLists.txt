@@ -1,6 +1,8 @@
+add_subdirectory(algo)
 add_subdirectory(utils)
 add_subdirectory(poco)
 add_subdirectory(basic)
 add_subdirectory(net)
 add_subdirectory(base)
+add_subdirectory(thread)
 add_subdirectory(sanitizer)
