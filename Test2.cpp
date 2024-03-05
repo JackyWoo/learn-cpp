@@ -129,17 +129,13 @@ int main()
     auto * queue_ptr = new Queue1(1, 1);
     cout << "queue_ptr address:" << reinterpret_cast<uint64_t>(queue_ptr) << endl;
 
-    try
-    {
-        throw;
-    }
-    catch (std::exception e)
-    {
-        cout << "caught excepthon e";
-    }
-    catch (...)
-    {
-        cout << "caught something";
-    }
+
+#define ALIGN(x, a)		__ALIGN_KERNEL((x), (a))
+#define __ALIGN_KERNEL(x, a)		__ALIGN_KERNEL_MASK(x, (typeof(x))(a) - 1)
+#define __ALIGN_KERNEL_MASK(x, mask)	(((x) + (mask)) & ~(mask))
+
+    auto aligned = ALIGN(9, 8);
+    cout << "ALIGN(1, 8) is " << aligned << endl;
+    cout << (aligned >> 3) << endl;
 
 }

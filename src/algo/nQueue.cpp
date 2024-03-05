@@ -70,7 +70,7 @@ void nQueue(int n)
     Board board;
     for (int i = 0; i < n; i++)
     {
-        board.push_back(std::move(vector(4, 0)));
+        board.push_back(std::move(vector(n, 0)));
     }
     backTrack(board, 0, n);
 }
