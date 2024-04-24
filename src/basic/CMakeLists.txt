@@ -103,7 +103,8 @@ add_executable(TerminateTest exception/TerminateTest.cpp)
 
 #--------------  exception --------------
 
-add_executable(DynamicCastTest cast/DynamicCastTest.cpp)
+add_executable(SerializeTest class/SerializeTest.cpp)
+add_executable(VirtualFunctionTest class/VirtualFunctionTest.cpp)
 
 
 #--------------  time --------------

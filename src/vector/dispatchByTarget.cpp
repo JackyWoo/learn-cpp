@@ -2,6 +2,8 @@
 // Created by wujianchao5 on 2024/2/2.
 //
 
+#include <iostream>
+
 /// Test dispatch by target
 
 __attribute__ ((target ("default")))
@@ -18,14 +20,7 @@ int foo ()
     return 1;
 }
 
-__attribute__ ((target ("arch=atom")))
-int foo ()
-{
-    // foo version for the Intel ATOM processor
-    return 2;
-}
-
-__attribute__ ((target ("arch=amdfam10")))
+__attribute__ ((target ("sse4.2")))
 int foo ()
 {
     // foo version for the AMD Family 0x10 processors.
@@ -35,6 +30,7 @@ int foo ()
 int main ()
 {
     int (*p)() = &foo;
-    assert ((*p) () == foo ());
+//    assert ((*p) () == foo ());
+    std::cout << foo() << std::endl;
     return 0;
 }
