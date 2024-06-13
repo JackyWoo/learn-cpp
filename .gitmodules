@@ -4,3 +4,6 @@
 [submodule "contrib/llvm-project"]
 	path = contrib/llvm-project
 	url = https://github.com/llvm/llvm-project.git
+[submodule "contrib/concurrentqueue"]
+	path = contrib/concurrentqueue
+	url = https://github.com/cameron314/concurrentqueue.git
