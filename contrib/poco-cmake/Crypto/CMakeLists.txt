@@ -32,7 +32,7 @@ if (ENABLE_SSL)
         target_include_directories (_poco_crypto SYSTEM PUBLIC ${LIBRARY_DIR}/Crypto/include)
 
         find_package(OpenSSL)
-        set(OPENSSL_LIBRARIES "/usr/local/opt/openssl@3/lib/libssl.a;/usr/local/opt/openssl@3/lib/libcrypto.a")
+#        set(OPENSSL_LIBRARIES "/usr/local/opt/openssl@3/lib/libssl.a;/usr/local/opt/openssl@3/lib/libcrypto.a")
         message(STATUS "OPENSSL_INCLUDE_DIR - ${OPENSSL_INCLUDE_DIR}, OPENSSL_LIBRARIES - ${OPENSSL_LIBRARIES}, OPENSSL_VERSION - ${OPENSSL_VERSION}")
         message(STATUS "OPENSSL_DIR - ${OPENSSL_DIR}, OPENSSL_ROOT_DIR - ${OPENSSL_ROOT_DIR}, OPENSSL_LIBRARY_DIR - ${OPENSSL_LIBRARY_DIR}")
 

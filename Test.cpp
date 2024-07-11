@@ -505,5 +505,9 @@ int main()
 
     cout << "max value of double larger than max value of long? " << (double_max > long_max) << endl;
 
-
+    int64_t i1 = 1;
+    uint64_t i2 = 2;
+    int64_t i3 = i1 - i2;
+    cout << std::to_string(i3) << endl;
+    cout << std::to_string(i1 - i2) << endl;
 }

@@ -4,6 +4,7 @@
 add_library(utils
         threadpool/GroupedThreadPool.cpp
         buffer/ByteBuffer.cpp
+        Stopwatch.h
         )
 
 target_include_directories(utils
