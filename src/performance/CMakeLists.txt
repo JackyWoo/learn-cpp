@@ -1,3 +1,4 @@
 add_executable(perf_hashmap perf_hashmap.cpp)
 add_executable(perf_hashmap_emplace perf_hashmap_emplace.cpp)
 add_executable(perf_clock_get_time perf_clock_get_time.cpp)
+add_executable(perf_hash_func perf_hash_func.cpp)

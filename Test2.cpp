@@ -19,8 +19,10 @@
 #include <thread>
 #include <tuple>
 #include <unordered_map>
+#include <type_traits>
 
 using namespace std;
+using String = std::string;
 
 struct Foo
 {
@@ -32,10 +34,7 @@ struct Foo
 
 int main()
 {
-    uint32_t e = 1000000000;
-    uint64_t f = static_cast<uint64_t>(e) * 100;
-    cout << "aaa " << to_string(f) << endl;
-
-    cout << std::to_string(std::numeric_limits<double>::max()) << endl;
-    cout << std::to_string(std::numeric_limits<uint64_t>::max()) << endl;
+    std::aligned_union_t<32, uint64_t, std::string> storage;
+    String foo = "123456";
+    new (&storage) String(foo.data(), foo.size());
 }
