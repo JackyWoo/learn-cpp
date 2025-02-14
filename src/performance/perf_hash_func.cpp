@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
 #include <unordered_map>
 #include <nmmintrin.h>
 
@@ -7,8 +8,8 @@ using UInt64 = uint64_t;
 
 inline size_t getCurrentTimestamp()
 {
-    auto now = std::chrono::system_clock::now();
-    return std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()).count();
+    auto now = std::chrono::steady_clock::now();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
 }
 
 /** Taken from MurmurHash. This is Murmur finalizer.
@@ -40,7 +41,6 @@ int main()
 {
     size_t n = 1000000;
 
-
     auto t1 = getCurrentTimestamp();
 
     for (size_t i=0; i< n; i++)
@@ -53,7 +53,12 @@ int main()
 
     auto t3 = getCurrentTimestamp();
 
-    std::cout << "Standard hash time " << std::to_string(t2 - t1) << "us" << std::endl;
-    std::cout << "intHashCRC32 hash time " << std::to_string(t3 - t2) << "us" << std::endl;
+    for (size_t i=0; i< n; i++)
+        intHash64(i);
 
+    auto t4 = getCurrentTimestamp();
+
+    std::cout << "Standard hash time " << std::to_string(t2 - t1) << "ns" << std::endl;
+    std::cout << "intHashCRC32 hash time " << std::to_string(t3 - t2) << "ns" << std::endl;
+    std::cout << "intHash64 hash time " << std::to_string(t4 - t3) << "ns" << std::endl;
 }

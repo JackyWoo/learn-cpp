@@ -5,3 +5,5 @@ target_link_libraries(StackTraceTest StackTrace)
 
 add_executable(QueueTest QueueTest.cpp)
 target_link_libraries(QueueTest concurrentqueue)
+
+add_executable(ExtensionDemo ExtensionDemo.cpp)
